@@ -33,3 +33,55 @@ h1 {
     align-items: center;
 }
 
+.side-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #999;
+}
+
+#left-info span:last-child,
+#right-info span:last-child {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+
+#balance-indicator {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #27ae60;
+    height: 24px;
+    letter-spacing: 0.5px;
+    transition: opacity 0.4s;
+    opacity: 0;
+}
+
+#balance-indicator.visible {
+    opacity: 1;
+}
+
+
+#seesaw-wrapper {
+    position: relative;
+    width: 500px;
+    height: 260px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#plank {
+    position: absolute;
+    top: 80px;
+    left: 50px;
+    width: 400px;
+    height: 16px;
+    background: linear-gradient(180deg, #a0724a 0%, #7a5230 100%);
+    border-radius: 4px;
+    overflow: visible;
+    transform-origin: center center;
+    cursor: pointer;
+    z-index: 2;
+}
