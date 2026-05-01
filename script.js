@@ -14,4 +14,23 @@ function getColor() {
   //  COLORS dizisinden rastgele bir renk seçmek için Math.random() ve Math.floor() fonksiyonlarını kullandım.
 }
 
+function renderObject(obj) {
+  const size = 22 + obj.weight * 3; // Burada ağırlık nesnesinin boyutunun belirlemesi için renderObject fonksiyonunu oluşturdum.
+  //  Ağırlık değeri arttıkça nesnenin boyutunun da artması için  bir formül kullandım: 22 piksel taban boyutuna ağırlığın 3 katını ekledim.
 
+  const el = document.createElement('div'); // Ağırlık nesnesini temsil etmek için bir div elementi oluşturdum.
+  el.className = 'weight-object'; // Oluşturduğum div elementine weight-object sınıfını atadım, böylece CSS ile stil verebilirim.
+  el.dataset.id = obj.id; // Her ağırlık nesnesine benzersiz bir id atamak için data-id özelliğini kullandım, bu sayede ileride bu nesneleri tanımlayabilir ve istediğim şekilde yönetebilir..
+  el.textContent = obj.weight; // Ağırlık nesnesinin üzerine ağırlık değerini yazdırmak için textContent özelliğini kullandım, böylece kullanıcı hangi ağırlık nesnesine tıkladığını görebilir.
+
+  el.style.width  = size + 'px'; // Ağırlık nesnesinin genişliğini belirlemek için style.width özelliğini kullandım, böylece ağırlık değeri arttıkça nesnenin genişliği de artacak.
+  el.style.height = size + 'px'; // Aynı şkeilde heigth özelliğini kullanarak ağırlık nesnesinin yüksekliğini belirledim, böylece ağırlık değeri arttıkça nesnenin yüksekliği de artacak.
+  el.style.background = obj.color; // Ağırlık nesnesinin arka plan rengini belirlemek için style.background özelliğini kullandım, her nesne farklı bir renkte görünecek.
+  // Daire veya kare: görsel çeşitlilik için shape özelliğine göre border-radius ayarlanır
+  el.style.borderRadius = obj.shape === 'circle' ? '50%' : '6px';
+  el.style.left = (PLANK_WIDTH / 2 + obj.offset - size / 2) + 'px'; // Ağırlık nesnesinin yatay konumunu belirlemek için style.left özelliğini kullandım, 
+  //nesne tahtanın ortasından başlayarak offset değerine göre sağa veya sola kayacak.
+  el.style.top  = (-size) + 'px'; // Ağırlık nesnesinin dikey konumunu belirlemek için style.top özelliğini kullandım, nesne tahtnaın üstünde dik durabilsin diye bunu yapmak istedim.
+
+  plank.appendChild(el); // Oluşturduğum ağırlık nesnesini plank elementinin içine eklemek için appendChild metodunu kullandım,kullanıcı tahtaya tıkladığında yeni bir ağırlık nesnesi görünecek.
+}
