@@ -59,6 +59,37 @@ function getAngle(left, right) {
   return Math.max(-30, Math.min(30, (right - left) / 50));
 }
 
+
+// Hedef açıyı hesaplar ve animasyonu başlatır, ağırlık panelini günceller
+function updateSeesaw() {
+  var torques = computeTorques();
+  targetAngle = getAngle(torques.left, torques.right);
+
+  if (!animating) {
+    animating = true;
+    requestAnimationFrame(animateToTarget);
+  }
+
+  var leftTotal = 0;
+  var rightTotal = 0;
+  state.objects.forEach(function(obj) {
+    if (obj.offset < 0) leftTotal += obj.weight;
+    else rightTotal += obj.weight;
+  });
+
+  leftSpan.textContent  = leftTotal;
+  rightSpan.textContent = rightTotal;
+
+  // İki tarafın torku birbirine çok yakınsa denge göstergesini göster
+  var diff = Math.abs(torques.left - torques.right);
+  if (state.objects.length > 0 && diff < 200) {
+    balanceEl.textContent = '⚖ Balanced!';
+    balanceEl.classList.add('visible');
+  } else {
+    balanceEl.classList.remove('visible');
+  }
+}
+
 // Mevcut objeleri localStorage'a kaydeder
 function saveState() {
   localStorage.setItem('seesaw-objects', JSON.stringify(state.objects));
