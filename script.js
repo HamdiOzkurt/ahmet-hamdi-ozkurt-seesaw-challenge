@@ -59,7 +59,10 @@ function getAngle(left, right) {
   return Math.max(-30, Math.min(30, (right - left) / 50));
 }
 
-
+// Mevcut objeleri localStorage'a kaydeder
+function saveState() {
+  localStorage.setItem('seesaw-objects', JSON.stringify(state.objects));
+}
 
 function loadState() {
   var saved = localStorage.getItem('seesaw-objects'); // localStorage'dan kaydedilmiş ağırlık nesnelerini almak için getItem metodunu kullandım,kullanıcı sayfayı yenilediğinde veya tekrar ziyaret ettiğinde önceki durumunu görebilecek.
@@ -73,6 +76,51 @@ function loadState() {
   updateSeesaw(); // Yüklenen nesnelerle tahtayı yeniden dengelemek için updateSeesaw fonksiyonunu çağırdım, kullanıcı sayfayı yenilediğinde veya tekrar ziyaret ettiğinde tahtanın önceki durumunu görebilecek.
 }
 
+function clampOffset(offset, size) {
+  var limit = PLANK_WIDTH / 2 - size / 2 - 4;
+  return Math.max(-limit, Math.min(limit, offset));
+}
+// Pause butonuna basınca animasyon ve yeni obje ekleme durur
+document.getElementById('pause-btn').addEventListener('click', function() {
+  isPaused = !isPaused;
+  this.textContent = isPaused ? 'Resume' : 'Pause';
+  this.classList.toggle('paused', isPaused);
 
+  if (!isPaused && !animating) {
+    animating = true;
+    requestAnimationFrame(animateToTarget);
+  }
+});
 
+plank.addEventListener('click', function(e) {
+  if (isPaused) return; // duraklatıldıysa tıklama çalışmasın // Tahtaya tıklandığında yeni bir ağırlık nesnesi oluşturmak için plank elementine click tıklanabilir olması için addEventListener metodunu kullandım, böylece kullanıcı tahtaya tıkladığında yeni bir ağırlık nesnesi oluşturulacak.
+  const weight = Math.floor(Math.random() * 10) + 1; // Ağırlık nesnesinin ağırlığını rastgele belirlemek için Math.random() ve Math.floor() fonksiyonlarını kullandım,her tıklamada farklı bir ağırlık değeri atanacak.
+  const size   = 22 + weight * 3;
+  const raw    = e.offsetX - PLANK_WIDTH / 2; // Tahtaya tıklanan noktanın tahtanın ortasından ne kadar uzak olduğunu hesaplamak için e.offsetX özelliğini kullandım,nesnesi tıklanan noktaya göre sağa veya sola kayacak.
+  const offset = clampOffset(raw, size);
 
+  const obj = {  // Yeni bir ağırlık nesnesi oluşturmak için bir obje tanımladım, bu obje id, weight, offset, color ve shape gibi özelliklere sahip olacak.
+    id: Date.now(),
+    weight: weight,
+    offset: offset,
+    color: getColor(),
+    shape: Math.random() > 0.5 ? 'circle' : 'square' // rastgele daire veya kare
+  };
+
+  state.objects.push(obj); // Oluşturduğum ağırlık nesnesini state.objects dizisine eklemek için push metodunu kullandım, hafıza içinde oluşturulan tüm ağırlık nesnelerini tutabileceğim bir yapı oluşturmuş oldum.
+  renderObject(obj); // Oluşturduğum ağırlık nesnesini ekranda göstermek için renderObject fonksiyonunu çağırdım,kullanıcı tahtaya tıkladığında yeni bir ağırlık nesnesi görebilecek.
+  updateSeesaw(); // Her yeni nesne eklenince tahtayı yeniden dengele
+  saveState(); // Yeni durumu localStorage'a kaydet
+  playDropSound(); // Obje düşünce hafif ses çal
+});
+
+// Reset butonuna basınca tüm objeleri temizler ve localStorage'ı sıfırlar
+document.getElementById('reset-btn').addEventListener('click', function() {
+  state.objects = [];
+  plank.innerHTML = '';
+  localStorage.removeItem('seesaw-objects');
+  renderScale();
+  updateSeesaw();
+});
+
+loadState();
