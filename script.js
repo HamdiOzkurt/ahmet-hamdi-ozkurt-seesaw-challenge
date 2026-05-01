@@ -8,6 +8,15 @@ const state = {
 const plank     = document.getElementById('plank');
 const leftSpan  = document.getElementById('left-weight');
 const rightSpan = document.getElementById('right-weight');
+const balanceEl = document.getElementById('balance-indicator');
+
+// Spring simülasyonu değişkenleri — velocity tabanlı yumuşak dönüş
+var currentAngle = 0;
+var targetAngle  = 0;
+var velocity     = 0;
+var animating    = false;
+var isPaused     = false;
+var MAX_VEL      = 0.25;
 
 function getColor() {
   return COLORS[Math.floor(Math.random() * COLORS.length)]; // Renk paletlerini rast gele seçmek için getColor fonksiyonunu oluşturmak istedim.
