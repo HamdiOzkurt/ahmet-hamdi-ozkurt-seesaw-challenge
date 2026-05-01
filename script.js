@@ -84,6 +84,15 @@ function animateToTarget() {
 
   velocity *= damping;
   currentAngle += velocity;
+  plank.style.transform = 'rotate(' + currentAngle + 'deg)';
+
+  if (Math.abs(diff) < 0.05 && Math.abs(velocity) < 0.02) {
+    currentAngle = targetAngle;
+    velocity = 0;
+    plank.style.transform = 'rotate(' + currentAngle + 'deg)';
+    animating = false;
+    return;
+  }
 
   requestAnimationFrame(animateToTarget);
 }
@@ -203,5 +212,6 @@ document.getElementById('reset-btn').addEventListener('click', function() {
   renderScale();
   updateSeesaw();
 });
+
 
 loadState();
