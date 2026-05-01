@@ -34,3 +34,28 @@ function renderObject(obj) {
 
   plank.appendChild(el); // Oluşturduğum ağırlık nesnesini plank elementinin içine eklemek için appendChild metodunu kullandım,kullanıcı tahtaya tıkladığında yeni bir ağırlık nesnesi görünecek.
 }
+
+// Tahtanın her iki tarafındaki toplam torkları hesaplamak için computeTorques fonksiyonunu oluşturdum, bu fonksiyon state.objects dizisindeki her nesnenin ağırlığını ve offsetini kullanarak soldaki ve sağdaki toplam torkları hesaplayacak.
+function computeTorques() {
+  var left = 0;
+  var right = 0;
+
+  state.objects.forEach(function(obj) {
+    if (obj.offset < 0) { // Nesnenin offseti yani tahtanın ortasından ne kadar uzak olduğu negatifse, bu nesne sol tarafta demektir ve soldaki toplam torka eklenir. Torku hesaplamak için ağırlık ile offsetin mutlak değerini çarparak ekledim,
+    // nesne ne kadar uzakta olursa o kadar fazla tork oluşturacak.
+      left += obj.weight * Math.abs(obj.offset);  
+    } else {
+      right += obj.weight * obj.offset;
+    }
+  });
+
+}
+
+
+// PDF'de verilen formül: açıyı ±30 derece ile sınırlandırıyorum.
+// /10 yerine /50 kullandım — küçük tork farklarında çok agresif dönmesin diye.
+function getAngle(left, right) {
+  return Math.max(-30, Math.min(30, (right - left) / 50));
+}
+
+
