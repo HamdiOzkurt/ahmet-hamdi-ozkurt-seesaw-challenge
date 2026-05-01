@@ -69,6 +69,25 @@ function getAngle(left, right) {
 }
 
 
+// Spring simülasyonu: velocity tabanlı, hedefe ivmelenerek yaklaşır
+function animateToTarget() {
+  var stiffness = 0.03;
+  var damping   = 0.90;
+
+  if (isPaused) { animating = false; return; }
+
+  var diff = targetAngle - currentAngle;
+  velocity += diff * stiffness;
+
+  if (velocity >  MAX_VEL) velocity =  MAX_VEL;
+  if (velocity < -MAX_VEL) velocity = -MAX_VEL;
+
+  velocity *= damping;
+  currentAngle += velocity;
+
+  requestAnimationFrame(animateToTarget);
+}
+
 // Hedef açıyı hesaplar ve animasyonu başlatır, ağırlık panelini günceller
 function updateSeesaw() {
   var torques = computeTorques();
@@ -115,6 +134,28 @@ function loadState() {
   });
   updateSeesaw(); // Yüklenen nesnelerle tahtayı yeniden dengelemek için updateSeesaw fonksiyonunu çağırdım, kullanıcı sayfayı yenilediğinde veya tekrar ziyaret ettiğinde tahtanın önceki durumunu görebilecek.
 }
+
+// Web Audio API ile hafif bir düşme sesi üretir, harici kütüphane kullanmadan
+function playDropSound() {
+  var ctx  = new (window.AudioContext || window.webkitAudioContext)();
+  var osc  = ctx.createOscillator();
+  var gain = ctx.createGain();
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(280, ctx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(90, ctx.currentTime + 0.15);
+
+  gain.gain.setValueAtTime(0.25, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+
+  osc.start(ctx.currentTime);
+  osc.stop(ctx.currentTime + 0.2);
+}
+
+
 
 function clampOffset(offset, size) {
   var limit = PLANK_WIDTH / 2 - size / 2 - 4;
