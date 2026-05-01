@@ -60,3 +60,19 @@ function getAngle(left, right) {
 }
 
 
+
+function loadState() {
+  var saved = localStorage.getItem('seesaw-objects'); // localStorage'dan kaydedilmiş ağırlık nesnelerini almak için getItem metodunu kullandım,kullanıcı sayfayı yenilediğinde veya tekrar ziyaret ettiğinde önceki durumunu görebilecek.
+  if (!saved) return; 
+
+  state.objects = JSON.parse(saved); // Alınan JSON stringini tekrar JavaScript objesine dönüştürmek için JSON.parse metodunu kullandım,kaydedilmiş ağırlık nesnelerini hafıza içinde kullanabileceğim bir formata getirmiş oldum.
+  state.objects.forEach(function(obj) { // Yüklenen her ağırlık nesnesini ekranda göstermek için forEach döngüsü ile state.objects dizisindeki her nesne için 
+  // renderObject fonksiyonunu çağırdım, kullanıcı sayfayı yenilediğinde veya tekrar ziyaret ettiğinde önceki durumunu görebilecek.
+    renderObject(obj);
+  });
+  updateSeesaw(); // Yüklenen nesnelerle tahtayı yeniden dengelemek için updateSeesaw fonksiyonunu çağırdım, kullanıcı sayfayı yenilediğinde veya tekrar ziyaret ettiğinde tahtanın önceki durumunu görebilecek.
+}
+
+
+
+
