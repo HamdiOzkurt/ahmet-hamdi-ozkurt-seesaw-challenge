@@ -35,6 +35,12 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 4px;
+    background: #fff;
+    padding: 10px 24px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    min-width: 100px;
 }
 
 .side-label {
@@ -89,3 +95,60 @@ h1 {
     cursor: pointer;
     z-index: 2;
 }
+
+#pivot { 
+    position: absolute;
+    top: 96px;
+    left: 50%;
+    transform: translateX(-50%); 
+    width: 0;
+    height: 0;
+    border-left: 22px solid transparent;
+    border-right: 22px solid transparent;
+    border-bottom: 44px solid #555;
+    z-index: 1;
+}
+
+#base {
+    position: absolute;
+    top: 140px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 12px;
+    background: #444;
+    border-radius: 3px;
+    z-index: 1;
+}
+
+/* --- Distance Scale on Plank --- */
+.scale-tick {
+    position: absolute;
+    top: 1px;
+    width: 1px;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.scale-label {
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    font-weight: 600;
+    color: rgba(80, 50, 20, 0.7);
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.scale-center {
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 100%;
+}
+
