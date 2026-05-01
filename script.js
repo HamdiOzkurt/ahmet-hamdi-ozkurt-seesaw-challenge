@@ -48,6 +48,7 @@ function computeTorques() {
       right += obj.weight * obj.offset;
     }
   });
+  return {left:left,right:right};
 
 }
 
