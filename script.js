@@ -185,8 +185,7 @@ function logDrop(obj) {
     obj.weight + 'kg dropped on ' + side + ' side at ' + dist + 'px from center'
   ));
   var log = document.getElementById('activity-log');
-  log.appendChild(li);
-  log.scrollTop = log.scrollHeight; // En alta kaydır
+  log.prepend(li);
 }
 
 function clampOffset(offset, size) {
