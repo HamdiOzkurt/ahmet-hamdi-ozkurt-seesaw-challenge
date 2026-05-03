@@ -214,4 +214,24 @@ document.getElementById('reset-btn').addEventListener('click', function() {
 });
 
 
+// Plank üzerinde pivot'tan mesafeyi gösteren çizgi ve etiketler
+function renderScale() {
+  plank.querySelectorAll('.scale-tick, .scale-label').forEach(function(el) { el.remove(); });
+  var step = 50;
+  for (var x = -150; x <= 150; x += step) {
+    var tick = document.createElement('div');
+    tick.className = 'scale-tick';
+    tick.style.left = (PLANK_WIDTH / 2 + x) + 'px';
+    plank.appendChild(tick);
+    if (x !== 0) {
+      var label = document.createElement('div');
+      label.className = 'scale-label';
+      label.style.left = (PLANK_WIDTH / 2 + x) + 'px';
+      label.textContent = Math.abs(x) + 'px';
+      plank.appendChild(label);
+    }
+  }
+}
+
+renderScale();
 loadState();
