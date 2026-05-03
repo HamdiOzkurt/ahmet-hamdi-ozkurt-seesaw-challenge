@@ -172,6 +172,23 @@ function playDropSound() {
 
 
 
+// Her drop olayını logla: "8kg dropped on left side at 170px from center"
+function logDrop(obj) {
+  var side = obj.offset < 0 ? 'left' : 'right';
+  var dist = Math.abs(Math.round(obj.offset));
+  var li   = document.createElement('li');
+  var dot  = document.createElement('span');
+  dot.className = 'log-dot';
+  dot.style.background = obj.color;
+  li.appendChild(dot);
+  li.appendChild(document.createTextNode(
+    obj.weight + 'kg dropped on ' + side + ' side at ' + dist + 'px from center'
+  ));
+  var log = document.getElementById('activity-log');
+  log.appendChild(li);
+  log.scrollTop = log.scrollHeight; // En alta kaydır
+}
+
 function clampOffset(offset, size) {
   var limit = PLANK_WIDTH / 2 - size / 2 - 4;
   return Math.max(-limit, Math.min(limit, offset));
@@ -206,10 +223,10 @@ plank.addEventListener('click', function(e) {
   state.objects.push(obj); // Oluşturduğum ağırlık nesnesini state.objects dizisine eklemek için push metodunu kullandım, hafıza içinde oluşturulan tüm ağırlık nesnelerini tutabileceğim bir yapı oluşturmuş oldum.
   renderObject(obj); // Oluşturduğum ağırlık nesnesini ekranda göstermek için renderObject fonksiyonunu çağırdım,kullanıcı tahtaya tıkladığında yeni bir ağırlık nesnesi görebilecek.
   updateSeesaw(); // Her yeni nesne eklenince tahtayı yeniden dengele
+  logDrop(obj);
   saveState();
   playDropSound();
 
-  // Bir sonraki tıklama için yeni ağırlığı üret ve göster
   nextWeight = Math.floor(Math.random() * 10) + 1;
   nextSpan.textContent = nextWeight;
 });
@@ -219,6 +236,7 @@ document.getElementById('reset-btn').addEventListener('click', function() {
   state.objects = [];
   plank.innerHTML = '';
   localStorage.removeItem('seesaw-objects');
+  document.getElementById('activity-log').innerHTML = '';
   renderScale();
   updateSeesaw();
 });
