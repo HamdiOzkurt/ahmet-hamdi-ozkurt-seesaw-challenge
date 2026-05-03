@@ -5,10 +5,15 @@ const state = {
   objects: []
 };
 
-const plank     = document.getElementById('plank');
-const leftSpan  = document.getElementById('left-weight');
-const rightSpan = document.getElementById('right-weight');
-const balanceEl = document.getElementById('balance-indicator');
+const plank      = document.getElementById('plank');
+const leftSpan   = document.getElementById('left-weight');
+const rightSpan  = document.getElementById('right-weight');
+const balanceEl  = document.getElementById('balance-indicator');
+const nextSpan   = document.getElementById('next-weight');
+const angleSpan  = document.getElementById('tilt-angle');
+
+var nextWeight = Math.floor(Math.random() * 10) + 1;
+nextSpan.textContent = nextWeight;
 
 // Spring simülasyonu değişkenleri — velocity tabanlı yumuşak dönüş
 var currentAngle = 0;
@@ -85,6 +90,7 @@ function animateToTarget() {
   velocity *= damping;
   currentAngle += velocity;
   plank.style.transform = 'rotate(' + currentAngle + 'deg)';
+  angleSpan.textContent = currentAngle.toFixed(1);
 
   if (Math.abs(diff) < 0.05 && Math.abs(velocity) < 0.02) {
     currentAngle = targetAngle;
@@ -114,8 +120,8 @@ function updateSeesaw() {
     else rightTotal += obj.weight;
   });
 
-  leftSpan.textContent  = leftTotal;
-  rightSpan.textContent = rightTotal;
+  leftSpan.textContent  = leftTotal.toFixed(1);
+  rightSpan.textContent = rightTotal.toFixed(1);
 
   // İki tarafın torku birbirine çok yakınsa denge göstergesini göster
   var diff = Math.abs(torques.left - torques.right);
@@ -183,8 +189,8 @@ document.getElementById('pause-btn').addEventListener('click', function() {
 });
 
 plank.addEventListener('click', function(e) {
-  if (isPaused) return; // duraklatıldıysa tıklama çalışmasın // Tahtaya tıklandığında yeni bir ağırlık nesnesi oluşturmak için plank elementine click tıklanabilir olması için addEventListener metodunu kullandım, böylece kullanıcı tahtaya tıkladığında yeni bir ağırlık nesnesi oluşturulacak.
-  const weight = Math.floor(Math.random() * 10) + 1; // Ağırlık nesnesinin ağırlığını rastgele belirlemek için Math.random() ve Math.floor() fonksiyonlarını kullandım,her tıklamada farklı bir ağırlık değeri atanacak.
+  if (isPaused) return;
+  const weight = nextWeight; // Önceden üretilmiş ağırlığı kullan
   const size   = 22 + weight * 3;
   const raw    = e.offsetX - PLANK_WIDTH / 2; // Tahtaya tıklanan noktanın tahtanın ortasından ne kadar uzak olduğunu hesaplamak için e.offsetX özelliğini kullandım,nesnesi tıklanan noktaya göre sağa veya sola kayacak.
   const offset = clampOffset(raw, size);
@@ -200,8 +206,12 @@ plank.addEventListener('click', function(e) {
   state.objects.push(obj); // Oluşturduğum ağırlık nesnesini state.objects dizisine eklemek için push metodunu kullandım, hafıza içinde oluşturulan tüm ağırlık nesnelerini tutabileceğim bir yapı oluşturmuş oldum.
   renderObject(obj); // Oluşturduğum ağırlık nesnesini ekranda göstermek için renderObject fonksiyonunu çağırdım,kullanıcı tahtaya tıkladığında yeni bir ağırlık nesnesi görebilecek.
   updateSeesaw(); // Her yeni nesne eklenince tahtayı yeniden dengele
-  saveState(); // Yeni durumu localStorage'a kaydet
-  playDropSound(); // Obje düşünce hafif ses çal
+  saveState();
+  playDropSound();
+
+  // Bir sonraki tıklama için yeni ağırlığı üret ve göster
+  nextWeight = Math.floor(Math.random() * 10) + 1;
+  nextSpan.textContent = nextWeight;
 });
 
 // Reset butonuna basınca tüm objeleri temizler ve localStorage'ı sıfırlar

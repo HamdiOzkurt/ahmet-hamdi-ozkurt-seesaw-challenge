@@ -25,13 +25,15 @@ h1 {
 
 #info-panel {
     display: flex;
-    gap: 60px;
+    gap: 16px;
     font-size: 1.0rem;
     color: #34495e;
 }
 
 #left-info,
-#right-info {
+#next-info,
+#right-info,
+#angle-info {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -40,18 +42,21 @@ h1 {
     padding: 10px 24px;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    min-width: 100px;
+    min-width: 110px;
 }
 
 .side-label {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: #999;
+    white-space: nowrap;
 }
 
 #left-info span:last-child,
-#right-info span:last-child {
+#next-info span:last-child,
+#right-info span:last-child,
+#angle-info span:last-child {
     font-size: 1.4rem;
     font-weight: 700;
     color: #2c3e50;
