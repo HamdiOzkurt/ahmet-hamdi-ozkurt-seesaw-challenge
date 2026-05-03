@@ -245,7 +245,7 @@ document.getElementById('reset-btn').addEventListener('click', function() {
 function renderScale() {
   plank.querySelectorAll('.scale-tick, .scale-label').forEach(function(el) { el.remove(); });
   var step = 50;
-  for (var x = -150; x <= 150; x += step) {
+  for (var x = -(PLANK_WIDTH / 2); x <= (PLANK_WIDTH / 2); x += step) {
     var tick = document.createElement('div');
     tick.className = 'scale-tick';
     tick.style.left = (PLANK_WIDTH / 2 + x) + 'px';
